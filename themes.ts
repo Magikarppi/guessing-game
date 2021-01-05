@@ -2,6 +2,7 @@ import { StyleSheet } from 'react-native';
 
 export const colors = {
   mainContrastColor: '#f7287b',
+  secondaryContrastColor: '#a3009b',
   titleColor: 'black',
   buttonCancel: '#ff5452',
   buttonConfirm: '#00edb5',
