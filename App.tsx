@@ -1,29 +1,70 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Alert, StyleSheet, View } from 'react-native';
 
 import Header from './components/Header';
 import EndGameScreen from './screens/EndGameScreen';
 import GameScreen from './screens/GameScreen';
 import StartGameScreen from './screens/StartGameScreen';
-
-type ShowScreen = 'StartGameScreen' | 'GameScreen' | 'EndGameScreen';
+import { ShowScreen } from './types';
 
 const App = () => {
   const [showScreen, setShowScreen] = useState<ShowScreen>('StartGameScreen');
+  const [gameTargetValue, setGameTargetValue] = useState<number>(1);
+  const [numberOfRounds, setNumberOfRounds] = useState<number>(0);
+
+  const gameTargetHandler = (targetNum: number) => {
+    setGameTargetValue(targetNum);
+  };
 
   const changeGameScreenHandler = (gameScreen: ShowScreen) => {
     setShowScreen(gameScreen);
   };
 
-  let content = <StartGameScreen onScreenChange={changeGameScreenHandler} />;
+  const roundsHandler = () => {
+    setNumberOfRounds((prevState) => prevState + 1);
+  };
+
+  const restartGameHandler = () => {
+    setShowScreen('StartGameScreen');
+    setNumberOfRounds(0);
+    setGameTargetValue(1);
+  };
+
+  let content;
 
   switch (showScreen) {
     case 'StartGameScreen':
-      content = <StartGameScreen />;
+      content = (
+        <StartGameScreen
+          onScreenChange={changeGameScreenHandler}
+          onTargetValueChange={gameTargetHandler}
+        />
+      );
+      break;
     case 'GameScreen':
-      content = <GameScreen />;
+      content = (
+        <GameScreen
+          onScreenChange={changeGameScreenHandler}
+          gameTargetValue={gameTargetValue}
+          roundsHandler={roundsHandler}
+        />
+      );
+      break;
     case 'EndGameScreen':
-      content = <EndGameScreen />;
+      content = (
+        <EndGameScreen
+          numberOfRounds={numberOfRounds}
+          restartGame={restartGameHandler}
+        />
+      );
+      break;
+    default:
+      content = (
+        <StartGameScreen
+          onScreenChange={changeGameScreenHandler}
+          onTargetValueChange={gameTargetHandler}
+        />
+      );
   }
 
   return (

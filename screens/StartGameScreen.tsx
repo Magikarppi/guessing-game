@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
 });
 
 const StartGameScreen = (props: any) => {
-  const [enteredValue, setEnteredValue] = useState<String>('');
+  const [enteredValue, setEnteredValue] = useState<string>('');
   const [gameTargetValue, setGameTargetValue] = useState<Number | undefined>(
     undefined
   );
@@ -58,6 +58,8 @@ const StartGameScreen = (props: any) => {
       return;
     }
     setGameTargetValue(enteredNumber);
+    props.onScreenChange('GameScreen');
+    props.onTargetValueChange(enteredNumber);
   };
 
   return (

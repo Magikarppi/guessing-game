@@ -18,9 +18,9 @@ const styles = StyleSheet.create({
   },
 });
 
-const ChosenNumberContainer = (props) => {
+const ChosenNumberContainer = (props: any) => {
   return (
-    <View style={styles}>
+    <View style={styles.container}>
       <Text>{props.children}</Text>
     </View>
   );
