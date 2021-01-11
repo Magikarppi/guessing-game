@@ -9,6 +9,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  card: {
+    marginBottom: 10,
+  },
 });
 
 const EndGameScreen = ({
@@ -20,10 +23,9 @@ const EndGameScreen = ({
 }) => {
   return (
     <View style={styles.screen}>
-      <Card>
+      <Card style={styles.card}>
         <Text>
-          Congratulations! You survived {numberOfRounds} rounds! Now it's time
-          to die!
+          Congratulations! You survived {numberOfRounds} rounds! Time to die!
         </Text>
       </Card>
       <Button title="Wanna play again?" onPress={() => restartGame()} />

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Alert, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import * as Font from 'expo-font';
+import AppLoading from 'expo-app-loading';
 
 import Header from './components/Header';
 import EndGameScreen from './screens/EndGameScreen';
@@ -7,16 +9,35 @@ import GameScreen from './screens/GameScreen';
 import StartGameScreen from './screens/StartGameScreen';
 import { ShowScreen } from './types';
 
+const fetchFonts = () => {
+  return Font.loadAsync({
+    'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),
+    'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf'),
+  });
+};
+
 const App = () => {
+  const [dataLoaded, setDataLoaded] = useState(false);
   const [showScreen, setShowScreen] = useState<ShowScreen>('StartGameScreen');
   const [gameTargetValue, setGameTargetValue] = useState<number>(1);
-  const [numberOfRounds, setNumberOfRounds] = useState<number>(0);
+  const [numberOfRounds, setNumberOfRounds] = useState<number>(1);
+
+  if (!dataLoaded) {
+    return (
+      <AppLoading
+        startAsync={fetchFonts}
+        onFinish={() => setDataLoaded(true)}
+        onError={(error) => console.log('error', error)}
+      />
+    );
+  }
 
   const gameTargetHandler = (targetNum: number) => {
     setGameTargetValue(targetNum);
   };
 
   const changeGameScreenHandler = (gameScreen: ShowScreen) => {
+    console.log('change screen to:', gameScreen);
     setShowScreen(gameScreen);
   };
 

@@ -30,7 +30,7 @@ const randomNumberGenerator = (
 
   const randomNum = Math.floor(Math.random() * (max - min)) + min;
 
-  if (randomNum === exclude) {
+  if (randomNum === exclude || randomNum > 99 || randomNum < 1) {
     return randomNumberGenerator(min, max, exclude);
   }
 
@@ -52,19 +52,29 @@ const GameScreen = ({
     randomNumberGenerator(1, 100, gameTargetValue)
   );
 
-  useEffect(() => {
-    if (currentGuess === gameTargetValue) {
-      onScreenChange('EndGameScreen');
-    }
-  }, [gameTargetValue, currentGuess, onScreenChange]);
+  // useEffect(() => {
+  //   if (currentGuess === gameTargetValue) {
+  //     onScreenChange('EndGameScreen');
+  //   }
+  // }, [gameTargetValue, currentGuess, onScreenChange]);
 
   const handleGuessLower = () => {
     if (currentGuess > gameTargetValue) {
-      setCurrentGuess((prevState) =>
-        randomNumberGenerator(minNum, prevState, currentGuess)
+      const randomNum = randomNumberGenerator(
+        minNum + 1,
+        currentGuess,
+        currentGuess
       );
-      setMaxNum(currentGuess);
+      setCurrentGuess(randomNum);
+      // setCurrentGuess((prevState) =>
+      //   randomNumberGenerator(minNum, prevState, currentGuess)
+      // );
       roundsHandler();
+      if (randomNum === gameTargetValue) {
+        onScreenChange('EndGameScreen');
+        return;
+      }
+      setMaxNum(currentGuess);
       return;
     } else {
       Alert.alert(
@@ -78,11 +88,21 @@ const GameScreen = ({
 
   const handleGuessHigher = () => {
     if (currentGuess < gameTargetValue) {
-      setCurrentGuess((prevState) =>
-        randomNumberGenerator(prevState, maxNum, currentGuess)
+      const randomNum = randomNumberGenerator(
+        currentGuess,
+        maxNum + 1,
+        currentGuess
       );
-      setMinNum(currentGuess);
+      setCurrentGuess(randomNum);
+      // setCurrentGuess((prevState) =>
+      //   randomNumberGenerator(prevState, maxNum, currentGuess)
+      // );
       roundsHandler();
+      if (gameTargetValue === randomNum) {
+        onScreenChange('EndGameScreen');
+        return;
+      }
+      setMinNum(currentGuess);
       return;
     } else {
       Alert.alert(
@@ -100,7 +120,8 @@ const GameScreen = ({
         <Text>Target number</Text>
         <ChosenNumberContainer>{gameTargetValue}</ChosenNumberContainer>
       </Card>
-      <Text>AI guessed: {currentGuess}</Text>
+      <Text>AI guessed: </Text>
+      <ChosenNumberContainer>{currentGuess}</ChosenNumberContainer>
       <Card style={styles.buttonContainer}>
         <Button title="Lower" onPress={() => handleGuessLower()} />
         <Button title="Higher" onPress={() => handleGuessHigher()} />
