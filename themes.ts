@@ -17,6 +17,6 @@ export const theme = StyleSheet.create({
     fontSize: 18,
     marginVertical: 10,
     color: colors.titleColor,
-    fontFamily: 'open-sans',
+    fontFamily: 'open-sans-bold',
   },
 });
