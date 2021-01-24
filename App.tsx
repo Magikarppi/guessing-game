@@ -21,6 +21,7 @@ const App = () => {
   const [showScreen, setShowScreen] = useState<ShowScreen>('StartGameScreen');
   const [gameTargetValue, setGameTargetValue] = useState<number>(1);
   const [numberOfRounds, setNumberOfRounds] = useState<number>(1);
+  const [pastGuesses, setPastGuesses] = useState<number[]>([]);
 
   if (!dataLoaded) {
     return (
@@ -45,10 +46,15 @@ const App = () => {
     setNumberOfRounds((prevState) => prevState + 1);
   };
 
+  const pastGuessesHandler = (pastGuess: number) => {
+    setPastGuesses((curState) => [...curState, pastGuess]);
+  };
+
   const restartGameHandler = () => {
     setShowScreen('StartGameScreen');
-    setNumberOfRounds(0);
+    setNumberOfRounds(1);
     setGameTargetValue(1);
+    setPastGuesses([]);
   };
 
   let content;
@@ -68,6 +74,9 @@ const App = () => {
           onScreenChange={changeGameScreenHandler}
           gameTargetValue={gameTargetValue}
           roundsHandler={roundsHandler}
+          pastGuessesHandler={pastGuessesHandler}
+          pastGuesses={pastGuesses}
+          numberOfRounds={numberOfRounds}
         />
       );
       break;

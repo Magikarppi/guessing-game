@@ -38,7 +38,7 @@ const EndGameScreen = ({
 }) => {
   return (
     <View style={styles.screen}>
-      <Text style={styles.subTitle}>Game over</Text>
+      <Text style={styles.subTitle}>Game over!</Text>
       <Card style={styles.card}>
         <Text style={styles.text}>
           Congratulations! You survived {numberOfRounds} rounds! Time to die!

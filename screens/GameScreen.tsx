@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Button, Text, Alert } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Button,
+  Text,
+  Alert,
+  ScrollView,
+  TouchableWithoutFeedbackBase,
+} from 'react-native';
 import ChosenNumberContainer from './ChosenNumberContainer';
 
 import { ShowScreen } from '../types';
@@ -17,6 +25,27 @@ const styles = StyleSheet.create({
     marginTop: 20,
     width: 300,
     maxWidth: '80%',
+    marginBottom: 10,
+  },
+  roundsText: {
+    fontSize: 23,
+    fontFamily: 'open-sans-bold',
+  },
+  subTitle: {
+    fontSize: 15,
+    textDecorationLine: 'underline',
+  },
+  listItem: {
+    borderColor: '#ccc',
+    backgroundColor: 'white',
+    borderWidth: 1,
+    padding: 15,
+    marginVertical: 10,
+  },
+  list: {
+    width: '80%',
+    alignItems: 'center',
+    flex: 1,
   },
 });
 
@@ -41,10 +70,16 @@ const GameScreen = ({
   gameTargetValue,
   onScreenChange,
   roundsHandler,
+  pastGuessesHandler,
+  pastGuesses,
+  numberOfRounds,
 }: {
   gameTargetValue: number;
   onScreenChange: (gameScreen: ShowScreen) => void;
   roundsHandler: () => void;
+  pastGuessesHandler: (currentGuess: number) => void;
+  pastGuesses: number[];
+  numberOfRounds: number;
 }) => {
   const [maxNum, setMaxNum] = useState<number>(100);
   const [minNum, setMinNum] = useState<number>(1);
@@ -61,19 +96,22 @@ const GameScreen = ({
   const handleGuessLower = () => {
     if (currentGuess > gameTargetValue) {
       const randomNum = randomNumberGenerator(
-        minNum + 1,
+        minNum,
         currentGuess,
         currentGuess
       );
-      setCurrentGuess(randomNum);
-      // setCurrentGuess((prevState) =>
-      //   randomNumberGenerator(minNum, prevState, currentGuess)
-      // );
-      roundsHandler();
       if (randomNum === gameTargetValue) {
         onScreenChange('EndGameScreen');
         return;
       }
+      setCurrentGuess(randomNum);
+
+      // setCurrentGuess((prevState) =>
+      //   randomNumberGenerator(minNum, prevState, currentGuess)
+      // );
+      roundsHandler();
+      pastGuessesHandler(currentGuess);
+
       setMaxNum(currentGuess);
       return;
     } else {
@@ -89,20 +127,23 @@ const GameScreen = ({
   const handleGuessHigher = () => {
     if (currentGuess < gameTargetValue) {
       const randomNum = randomNumberGenerator(
-        currentGuess,
-        maxNum + 1,
+        currentGuess + 1,
+        maxNum,
         currentGuess
       );
+      if (gameTargetValue === randomNum) {
+        onScreenChange('EndGameScreen');
+        return;
+      }
+
       setCurrentGuess(randomNum);
       // setCurrentGuess((prevState) =>
       //   randomNumberGenerator(prevState, maxNum, currentGuess)
       // );
       roundsHandler();
-      if (gameTargetValue === randomNum) {
-        onScreenChange('EndGameScreen');
-        return;
-      }
-      setMinNum(currentGuess);
+      pastGuessesHandler(currentGuess);
+
+      setMinNum(currentGuess + 1);
       return;
     } else {
       Alert.alert(
@@ -114,8 +155,17 @@ const GameScreen = ({
     }
   };
 
+  const renderListItem = (item: number) => {
+    return (
+      <View key={item} style={styles.listItem}>
+        <Text>{item}</Text>
+      </View>
+    );
+  };
+
   return (
     <View style={styles.screen}>
+      <Text style={styles.roundsText}>Round number {numberOfRounds}</Text>
       <Card>
         <Text>Target number</Text>
         <ChosenNumberContainer>{gameTargetValue}</ChosenNumberContainer>
@@ -126,6 +176,12 @@ const GameScreen = ({
         <Button title="Lower" onPress={() => handleGuessLower()} />
         <Button title="Higher" onPress={() => handleGuessHigher()} />
       </Card>
+      <Text style={styles.subTitle}>Past guesses</Text>
+      <View style={styles.list}>
+        <ScrollView>
+          {pastGuesses.map((guess) => renderListItem(guess))}
+        </ScrollView>
+      </View>
     </View>
   );
 };
