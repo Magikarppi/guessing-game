@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
 
 const ChosenNumberContainer = (props: any) => {
   return (
-    <View style={styles.container}>
+    <View style={{ ...styles.container, ...props.style }}>
       <Text>{props.children}</Text>
     </View>
   );

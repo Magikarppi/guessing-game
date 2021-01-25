@@ -1,5 +1,12 @@
 import React from 'react';
-import { View, StyleSheet, Text, Button, Image } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  Button,
+  Image,
+  Dimensions,
+} from 'react-native';
 import Card from '../components/Card';
 
 const styles = StyleSheet.create({
@@ -11,19 +18,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#1d211e',
   },
   card: {
-    marginBottom: 10,
+    marginBottom: Dimensions.get('window').height > 600 ? 10 : 3,
     backgroundColor: 'darkgrey',
   },
   text: {
     textAlign: 'center',
+    fontSize: Dimensions.get('window').height > 600 ? 16 : 10,
   },
   subTitle: {
     fontFamily: 'open-sans-bold',
-    fontSize: 20,
+    fontSize: Dimensions.get('window').width > 300 ? 20 : 8,
     color: '#e30000',
   },
   image: {
     width: '95%',
+    maxHeight: '40%',
     marginTop: 20,
     borderRadius: 10,
   },
